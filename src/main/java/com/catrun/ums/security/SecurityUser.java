@@ -15,9 +15,12 @@ public class SecurityUser implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean enabled;
 
-
     public Long getId() {
         return id;
+    }
+
+    public boolean isAdmin() {
+        return authorities.stream().anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ADMIN"));
     }
 
     @Override

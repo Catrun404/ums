@@ -35,26 +35,26 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotBlank(message = "Username can't be blank. ")
-//    @Size(min = 3, max = 16, message = "Username length should be between 3 and 16 characters. ")
+    @NotBlank(message = "Username can't be blank. ")
+    @Size(min = 3, max = 16, message = "Username length should be between 3 and 16 characters. ")
+    @Pattern(regexp = "^[a-zA-Z]{3,16}$", message = "The username must be only Latin characters. ")
     @Column(nullable = false, unique = true, length = 16)
     private String username;
 
-//    @NotBlank(message = "Password can't be blank. ")
-//    @Size(min = 3, max = 16, message = "Password length should be between 3 and 16 characters. ")
-//    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$)(?!.*[@#$%^&+=]).{3,16}$",
-//            message = "The password must be only Latin characters and numbers and no whitespace. ")
+    @NotBlank(message = "Password can't be blank. ")
     @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-//    @NotBlank(message = "Name can't be blank. ")
-//    @Size(min = 1, max = 16, message = "Name should be between 1 and 16 characters. ")
+    @NotBlank(message = "Name can't be blank. ")
+    @Size(min = 1, max = 16, message = "Name should be between 1 and 16 characters. ")
+    @Pattern(regexp = "^[a-zA-Z]{1,16}$", message = "The fist name must be only Latin characters. ")
     @Column(nullable = false, length = 16)
     private String firstName;
 
-//    @NotBlank(message = "First name can't be blank. ")
-//    @Size(min = 1, max = 16, message = "Last name should be between 1 and 16 characters. ")
+    @NotBlank(message = "First name can't be blank. ")
+    @Size(min = 1, max = 16, message = "Last name should be between 1 and 16 characters. ")
+    @Pattern(regexp = "^[a-zA-Z]{1,16}$", message = "The last name must be only Latin characters. ")
     @Column(nullable = false, length = 16)
     private String lastName;
 

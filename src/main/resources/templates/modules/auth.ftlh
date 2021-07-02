@@ -1,17 +1,31 @@
-<#import "profile.ftlh" as p>
+<#import "/spring.ftl" as spring />
 
 <#macro login path>
     <form action="${path}" method="post">
-        <@p.credentials/>
-        <#nested>
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <div><input type="submit" value="Submit"/></div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Username:</label>
+            <div class="col-sm-6">
+                <input type="text" name="username" class="form-control" placeholder="Username" value="${username!''}"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Password:</label>
+            <div class="col-sm-6">
+                <input type="password" name="password" class="form-control" placeholder="Password"/>
+            </div>
+        </div>
+        <div>
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-primary ml-2">Log In</button>
+        </div>
     </form>
 </#macro>
 
 <#macro logout>
-    <form action="/logout" method="post">
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <input type="submit" value="Sign Out"/>
-    </form>
+    <div>
+        <form action="/logout" method="post" class="form-inline">
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-primary ml-2">Log Out</button>
+        </form>
+    </div>
 </#macro>

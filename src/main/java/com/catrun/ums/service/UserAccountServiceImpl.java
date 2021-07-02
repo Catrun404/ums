@@ -4,7 +4,9 @@ import com.catrun.ums.api.repository.UserAccountRepository;
 import com.catrun.ums.api.service.UserAccountService;
 import com.catrun.ums.domain.Role;
 import com.catrun.ums.domain.UserAccount;
+import com.catrun.ums.service.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static java.lang.String.format;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -29,11 +34,14 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public Page<UserAccount> findAll(Role role, String username, Pageable pageable) {
+        log.trace("Method 'findAll' started.");
         if (role != null && username != null && !username.isEmpty()) {
-            return userAccountRepository.findByRoleAndUsernameLike(role, username, pageable);
+            String search = "%" + username + "%";
+            return userAccountRepository.findByRoleAndUsernameLike(role, search, pageable);
         }
         if (username != null && !username.isEmpty()) {
-            return userAccountRepository.findByUsernameLike(username, pageable);
+            String search = "%" + username + "%";
+            return userAccountRepository.findByUsernameLike(search, pageable);
         }
         if (role != null) {
             return userAccountRepository.findByRole(role, pageable);
@@ -43,11 +51,14 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserAccount findById(Long id) {
-        return userAccountRepository.findById(id).orElseThrow();
+        log.trace("Method 'findById' started with id={}.", id);
+        return userAccountRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(format("No user with id %d", id)));
     }
 
     @Override
     public boolean isUserExist(String username) {
+        log.trace("Method 'isUserExist' started.");
         return userAccountRepository.existsUserAccountByUsername(username);
     }
 
@@ -60,7 +71,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Transactional
     @Override
     public UserAccount updateUserAccount(UserAccount userAccount) {
-        UserAccount userAccountFromDb = userAccountRepository.findById(userAccount.getId()).orElseThrow();
+        log.trace("Method 'updateUserAccount' started.");
+        UserAccount userAccountFromDb = userAccountRepository.findById(userAccount.getId())
+                .orElseThrow(() -> new NotFoundException(format("No user with id %d", userAccount.getId())));
         if (userAccount.getUsername() != null) {
             userAccountFromDb.setUsername(userAccount.getUsername());
         }
@@ -84,6 +97,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public Optional<UserAccount> findByUsername(String username) {
+        log.trace("Method 'findByUsername' started with username='{}'.", username);
         return userAccountRepository.findByUsername(username);
     }
 }
