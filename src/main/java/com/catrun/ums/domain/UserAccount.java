@@ -41,7 +41,6 @@ public class UserAccount {
     @Column(nullable = false, unique = true, length = 16)
     private String username;
 
-    @NotBlank(message = "Password can't be blank. ")
     @JsonIgnore
     @Column(nullable = false)
     private String password;
